@@ -38,3 +38,5 @@ coverage/
 *.tmp
 tmp/
 temp/
+test-features.md
+server.log
