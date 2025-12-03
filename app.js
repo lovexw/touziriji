@@ -1,6 +1,7 @@
 const CONFIG = {
     TRANSACTIONS_KEY: 'btc_transactions',
     PRICE_API: 'https://api.coinbase.com/v2/prices/BTC-USD/spot',
+    FALLBACK_PRICE_API: 'https://ahr999.btchao.com/api/ahr999/latest',
     PRICE_UPDATE_INTERVAL: 60000,
 };
 
@@ -37,25 +38,39 @@ async function updateBTCPrice() {
         const data = await response.json();
         currentBTCPrice = parseFloat(data.data.amount);
         
-        document.getElementById('btc-price').textContent = `$${currentBTCPrice.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        })}`;
-        
-        const now = new Date();
-        document.getElementById('price-update').textContent = `更新时间：${now.toLocaleString('zh-CN')}`;
-        
-        const priceInput = document.getElementById('transaction-price');
-        if (!editingTransactionId && (!priceInput.value || priceInput.value === '0')) {
-            priceInput.value = currentBTCPrice.toFixed(2);
-        }
-        
-        updateStatistics();
+        displayPriceAndUpdate(false);
     } catch (error) {
-        console.error('获取比特币价格失败:', error);
-        document.getElementById('btc-price').textContent = '获取失败';
-        document.getElementById('price-update').textContent = '请检查网络连接';
+        console.error('主API获取比特币价格失败:', error);
+        try {
+            const fallbackResponse = await fetch(CONFIG.FALLBACK_PRICE_API);
+            const fallbackData = await fallbackResponse.json();
+            currentBTCPrice = parseFloat(fallbackData.currentPrice);
+            
+            displayPriceAndUpdate(true);
+        } catch (fallbackError) {
+            console.error('备用API获取比特币价格失败:', fallbackError);
+            document.getElementById('btc-price').textContent = '获取失败';
+            document.getElementById('price-update').textContent = '请检查网络连接';
+        }
     }
+}
+
+function displayPriceAndUpdate(isFallback) {
+    document.getElementById('btc-price').textContent = `${currentBTCPrice.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    })}`;
+    
+    const now = new Date();
+    const updateText = isFallback ? `更新时间：${now.toLocaleString('zh-CN')} (备用源)` : `更新时间：${now.toLocaleString('zh-CN')}`;
+    document.getElementById('price-update').textContent = updateText;
+    
+    const priceInput = document.getElementById('transaction-price');
+    if (!editingTransactionId && (!priceInput.value || priceInput.value === '0')) {
+        priceInput.value = currentBTCPrice.toFixed(2);
+    }
+    
+    updateStatistics();
 }
 
 function setupCalculationListeners() {
