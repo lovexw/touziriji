@@ -10,23 +10,18 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- 密码验证界面 -->
-    <div id="auth-container" class="auth-container">
-        <div class="auth-card">
-            <h1>🔐 比特币投资日记</h1>
-            <p>请输入访问密码</p>
-            <input type="password" id="password-input" placeholder="输入密码">
-            <button onclick="checkPassword()">进入</button>
-            <p class="error-message" id="error-message"></p>
-        </div>
-    </div>
-
     <!-- 主应用界面 -->
-    <div id="app-container" class="app-container hidden">
+    <div id="app-container" class="app-container">
+        <div class="warning-banner">
+            <div class="warning-icon">⚠️</div>
+            <div class="warning-content">
+                <strong>数据安全提示：</strong>所有数据仅存储在浏览器本地，不会上传到任何服务器。请定期使用「导出数据」功能备份您的交易记录，避免数据丢失。清除浏览器数据将导致记录永久丢失！
+            </div>
+        </div>
+
         <header class="header">
             <div class="header-content">
                 <h1>₿ 比特币投资日记</h1>
-                <button class="logout-btn" onclick="logout()">退出</button>
             </div>
         </header>
 
