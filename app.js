@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('transaction-form').addEventListener('submit', handleTransactionSubmit);
 
     document.getElementById('import-file-input').addEventListener('change', handleFileImport);
+    
+    setupCalculationListeners();
 });
 
 function initApp() {
@@ -43,7 +45,11 @@ async function updateBTCPrice() {
         const now = new Date();
         document.getElementById('price-update').textContent = `更新时间：${now.toLocaleString('zh-CN')}`;
         
-        // 价格更新后重新计算统计数据
+        const priceInput = document.getElementById('transaction-price');
+        if (!editingTransactionId && (!priceInput.value || priceInput.value === '0')) {
+            priceInput.value = currentBTCPrice.toFixed(2);
+        }
+        
         updateStatistics();
     } catch (error) {
         console.error('获取比特币价格失败:', error);
@@ -52,7 +58,41 @@ async function updateBTCPrice() {
     }
 }
 
-// 获取所有交易
+function setupCalculationListeners() {
+    const priceInput = document.getElementById('transaction-price');
+    const amountInput = document.getElementById('transaction-amount');
+    const totalInput = document.getElementById('transaction-total');
+    
+    let lastChanged = null;
+    
+    priceInput.addEventListener('input', () => {
+        lastChanged = 'price';
+        calculateFields();
+    });
+    
+    amountInput.addEventListener('input', () => {
+        lastChanged = 'amount';
+        calculateFields();
+    });
+    
+    totalInput.addEventListener('input', () => {
+        lastChanged = 'total';
+        calculateFields();
+    });
+    
+    function calculateFields() {
+        const price = parseFloat(priceInput.value) || 0;
+        const amount = parseFloat(amountInput.value) || 0;
+        const total = parseFloat(totalInput.value) || 0;
+        
+        if (lastChanged === 'total' && price > 0) {
+            amountInput.value = (total / price).toFixed(8);
+        } else if ((lastChanged === 'price' || lastChanged === 'amount') && (price > 0 || amount > 0)) {
+            totalInput.value = (price * amount).toFixed(2);
+        }
+    }
+}
+
 function getTransactions() {
     const data = localStorage.getItem(CONFIG.TRANSACTIONS_KEY);
     return data ? JSON.parse(data) : [];
@@ -98,12 +138,13 @@ function handleTransactionSubmit(e) {
 
     saveTransactions(transactions);
 
-    // 重置表单
     document.getElementById('transaction-form').reset();
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('transaction-date').value = today;
+    if (currentBTCPrice > 0) {
+        document.getElementById('transaction-price').value = currentBTCPrice.toFixed(2);
+    }
 
-    // 更新界面
     renderTransactions();
     updateStatistics();
 }
@@ -121,6 +162,7 @@ function editTransaction(id) {
     document.getElementById('transaction-date').value = transaction.date;
     document.getElementById('transaction-price').value = transaction.price;
     document.getElementById('transaction-amount').value = transaction.amount;
+    document.getElementById('transaction-total').value = (transaction.price * transaction.amount).toFixed(2);
     document.getElementById('transaction-note').value = transaction.note || '';
     
     updateFormUI();
@@ -134,6 +176,9 @@ function cancelEdit() {
     document.getElementById('transaction-form').reset();
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('transaction-date').value = today;
+    if (currentBTCPrice > 0) {
+        document.getElementById('transaction-price').value = currentBTCPrice.toFixed(2);
+    }
     updateFormUI();
 }
 

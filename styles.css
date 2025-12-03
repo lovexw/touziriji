@@ -188,6 +188,12 @@ body {
     font-size: 0.875rem;
 }
 
+.field-hint {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
 .form-group input,
 .form-group select,
 .form-group textarea {

@@ -79,12 +79,20 @@
                         
                         <div class="form-group">
                             <label>交易价格 (USD)</label>
-                            <input type="number" id="transaction-price" step="0.01" placeholder="例如: 45000" required>
+                            <input type="number" id="transaction-price" step="0.01" placeholder="自动填充当前价格" required>
+                            <small class="field-hint">默认使用当前价格，可自行修改</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>购买金额 (USD)</label>
+                            <input type="number" id="transaction-total" step="0.01" placeholder="例如: 1000">
+                            <small class="field-hint">输入金额自动计算数量</small>
                         </div>
                         
                         <div class="form-group">
                             <label>数量 (BTC)</label>
                             <input type="number" id="transaction-amount" step="0.00000001" placeholder="例如: 0.1" required>
+                            <small class="field-hint">输入数量自动计算金额</small>
                         </div>
                     </div>
                     
