@@ -1,0 +1,177 @@
+# 比特币投资日记 📊
+
+一个简洁优雅的比特币投资记录和收益追踪应用，可直接部署到 Cloudflare Pages。
+
+## ✨ 功能特性
+
+- 📝 **交易记录管理**：记录买入/卖出交易的详细信息
+- 💰 **实时价格追踪**：自动获取比特币实时价格（每分钟更新）
+- 📈 **收益计算**：自动计算持仓、成本、市值和账面收益
+- 📔 **投资笔记**：为每笔交易添加投资思考和策略记录
+- 🔐 **密码保护**：通过密码或URL参数保护数据安全
+- 💾 **数据导入导出**：支持备份和迁移数据
+- 🎨 **现代UI设计**：简约大气的响应式界面
+
+## 🚀 部署到 Cloudflare Pages
+
+### 方法一：通过 Cloudflare Dashboard
+
+1. 将代码推送到 GitHub 仓库
+2. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/)
+3. 进入 **Pages** 页面
+4. 点击 **Create a project**
+5. 选择你的 GitHub 仓库
+6. 配置构建设置：
+   - **Framework preset**: None
+   - **Build command**: 留空
+   - **Build output directory**: `/`
+7. 点击 **Save and Deploy**
+
+### 方法二：使用 Wrangler CLI
+
+```bash
+# 安装 Wrangler
+npm install -g wrangler
+
+# 登录 Cloudflare
+wrangler login
+
+# 部署项目
+wrangler pages deploy .
+```
+
+## 🔑 设置密码
+
+### 默认密码
+默认密码是：`btc2024`
+
+### 自定义密码
+
+#### 方法1：修改代码（推荐）
+编辑 `app.js` 文件，找到以下行：
+```javascript
+const correctPassword = typeof BTC_JOURNAL_PASSWORD !== 'undefined' 
+    ? BTC_JOURNAL_PASSWORD 
+    : 'btc2024';  // 修改这里的默认密码
+```
+
+#### 方法2：使用环境变量
+在 Cloudflare Pages 中设置环境变量：
+1. 进入你的 Pages 项目
+2. 前往 **Settings** > **Environment variables**
+3. 添加变量：
+   - **Variable name**: `BTC_JOURNAL_PASSWORD`
+   - **Value**: 你的自定义密码
+
+#### 方法3：通过URL参数访问
+直接在URL中传递密码：
+```
+https://your-app.pages.dev/?password=your-password
+```
+
+## 💻 本地开发
+
+无需构建工具，直接用浏览器打开 `index.html` 即可：
+
+```bash
+# 使用 Python 启动本地服务器
+python3 -m http.server 8000
+
+# 或使用 Node.js
+npx serve .
+
+# 然后在浏览器访问
+open http://localhost:8000
+```
+
+## 📖 使用说明
+
+### 添加交易记录
+1. 选择交易类型（买入/卖出）
+2. 填写交易日期
+3. 输入交易价格（美元）
+4. 输入交易数量（BTC）
+5. （可选）添加投资思考笔记
+6. 点击"添加记录"
+
+### 查看统计数据
+仪表板会实时显示：
+- 比特币当前价格
+- 持仓总量
+- 平均成本
+- 总投入金额
+- 当前市值
+- 账面收益和收益率
+
+### 数据管理
+- **导出数据**：将所有交易记录导出为 JSON 文件
+- **导入数据**：从 JSON 文件恢复数据
+- **清空数据**：删除所有记录（需二次确认）
+
+## 🗄️ 数据存储
+
+数据存储在浏览器的 `localStorage` 中，完全本地化，不会上传到任何服务器。
+
+**重要提示**：
+- 定期使用"导出数据"功能备份你的交易记录
+- 清除浏览器数据会导致记录丢失
+- 建议将导出的 JSON 文件保存到 GitHub 或云盘
+
+## 🎨 界面特点
+
+- 渐变背景，视觉舒适
+- 卡片式布局，信息清晰
+- 响应式设计，支持移动端
+- 流畅的动画效果
+- 直观的颜色标识（绿色=买入，红色=卖出）
+
+## 🔧 技术栈
+
+- 纯原生 HTML/CSS/JavaScript
+- 无需构建工具或框架
+- 使用 Coinbase API 获取实时价格
+- LocalStorage 存储数据
+
+## 📝 数据格式
+
+交易记录的 JSON 格式：
+```json
+[
+  {
+    "id": "1234567890",
+    "type": "buy",
+    "date": "2024-01-15",
+    "price": 45000,
+    "amount": 0.1,
+    "note": "这是我的投资思考...",
+    "timestamp": 1234567890000
+  }
+]
+```
+
+## 🛡️ 安全建议
+
+1. 修改默认密码
+2. 不要在公共电脑使用
+3. 定期导出数据备份
+4. 使用 HTTPS 访问（Cloudflare Pages 自动提供）
+
+## 📱 浏览器兼容性
+
+支持所有现代浏览器：
+- Chrome/Edge 90+
+- Firefox 88+
+- Safari 14+
+- 移动浏览器
+
+## 📄 License
+
+MIT License - 自由使用和修改
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+---
+
+⚠️ **风险提示**：比特币投资有风险，本应用仅用于记录，不构成投资建议。
