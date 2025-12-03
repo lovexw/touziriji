@@ -210,6 +210,13 @@ body {
     resize: vertical;
 }
 
+.form-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 .btn-primary {
     padding: 14px 28px;
     background: var(--primary-color);
@@ -220,11 +227,28 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: background 0.3s;
-    align-self: flex-start;
 }
 
 .btn-primary:hover {
     background: var(--primary-dark);
+}
+
+.btn-cancel {
+    padding: 14px 28px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-cancel:hover {
+    background: var(--text-secondary);
+    color: white;
+    border-color: var(--text-secondary);
 }
 
 /* 交易历史 */
@@ -431,6 +455,23 @@ body {
     margin-top: 12px;
 }
 
+.btn-edit {
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-edit:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
 .btn-delete {
     padding: 6px 14px;
     background: transparent;
@@ -439,6 +480,7 @@ body {
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.8125rem;
+    font-weight: 500;
     transition: all 0.3s;
 }
 

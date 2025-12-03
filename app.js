@@ -6,6 +6,7 @@ const CONFIG = {
 
 let currentBTCPrice = 0;
 let priceUpdateTimer = null;
+let editingTransactionId = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     initApp();
@@ -62,22 +63,39 @@ function saveTransactions(transactions) {
     localStorage.setItem(CONFIG.TRANSACTIONS_KEY, JSON.stringify(transactions));
 }
 
-// 添加交易
+// 添加或更新交易
 function handleTransactionSubmit(e) {
     e.preventDefault();
 
-    const transaction = {
-        id: Date.now().toString(),
-        type: document.getElementById('transaction-type').value,
-        date: document.getElementById('transaction-date').value,
-        price: parseFloat(document.getElementById('transaction-price').value),
-        amount: parseFloat(document.getElementById('transaction-amount').value),
-        note: document.getElementById('transaction-note').value,
-        timestamp: Date.now()
-    };
-
     const transactions = getTransactions();
-    transactions.push(transaction);
+
+    if (editingTransactionId) {
+        const index = transactions.findIndex(t => t.id === editingTransactionId);
+        if (index !== -1) {
+            transactions[index] = {
+                ...transactions[index],
+                type: document.getElementById('transaction-type').value,
+                date: document.getElementById('transaction-date').value,
+                price: parseFloat(document.getElementById('transaction-price').value),
+                amount: parseFloat(document.getElementById('transaction-amount').value),
+                note: document.getElementById('transaction-note').value,
+            };
+        }
+        editingTransactionId = null;
+        updateFormUI();
+    } else {
+        const transaction = {
+            id: Date.now().toString(),
+            type: document.getElementById('transaction-type').value,
+            date: document.getElementById('transaction-date').value,
+            price: parseFloat(document.getElementById('transaction-price').value),
+            amount: parseFloat(document.getElementById('transaction-amount').value),
+            note: document.getElementById('transaction-note').value,
+            timestamp: Date.now()
+        };
+        transactions.push(transaction);
+    }
+
     saveTransactions(transactions);
 
     // 重置表单
@@ -90,12 +108,67 @@ function handleTransactionSubmit(e) {
     updateStatistics();
 }
 
+// 编辑交易
+function editTransaction(id) {
+    const transactions = getTransactions();
+    const transaction = transactions.find(t => t.id === id);
+    
+    if (!transaction) return;
+
+    editingTransactionId = id;
+    
+    document.getElementById('transaction-type').value = transaction.type;
+    document.getElementById('transaction-date').value = transaction.date;
+    document.getElementById('transaction-price').value = transaction.price;
+    document.getElementById('transaction-amount').value = transaction.amount;
+    document.getElementById('transaction-note').value = transaction.note || '';
+    
+    updateFormUI();
+    
+    document.getElementById('transaction-form').scrollIntoView({ behavior: 'smooth' });
+}
+
+// 取消编辑
+function cancelEdit() {
+    editingTransactionId = null;
+    document.getElementById('transaction-form').reset();
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('transaction-date').value = today;
+    updateFormUI();
+}
+
+// 更新表单UI
+function updateFormUI() {
+    const formTitle = document.querySelector('.add-transaction h2');
+    const submitButton = document.querySelector('.btn-primary');
+    const cancelButton = document.getElementById('cancel-edit-btn');
+    
+    if (editingTransactionId) {
+        formTitle.textContent = '编辑交易记录';
+        submitButton.textContent = '更新记录';
+        if (cancelButton) {
+            cancelButton.style.display = 'inline-block';
+        }
+    } else {
+        formTitle.textContent = '添加交易记录';
+        submitButton.textContent = '添加记录';
+        if (cancelButton) {
+            cancelButton.style.display = 'none';
+        }
+    }
+}
+
 // 删除交易
 function deleteTransaction(id) {
     if (confirm('确定要删除这条交易记录吗？')) {
         let transactions = getTransactions();
         transactions = transactions.filter(t => t.id !== id);
         saveTransactions(transactions);
+        
+        if (editingTransactionId === id) {
+            cancelEdit();
+        }
+        
         renderTransactions();
         updateStatistics();
     }
@@ -182,6 +255,7 @@ function renderTransactions() {
                     </div>
                 ` : ''}
                 <div class="transaction-actions">
+                    <button class="btn-edit" onclick="editTransaction('${t.id}')">编辑</button>
                     <button class="btn-delete" onclick="deleteTransaction('${t.id}')">删除</button>
                 </div>
             </div>
