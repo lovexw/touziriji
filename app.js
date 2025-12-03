@@ -181,9 +181,14 @@ function deleteTransaction(id) {
     }
 }
 
+// 应用筛选
+function applyFilters() {
+    renderTransactions();
+}
+
 // 渲染交易列表
 function renderTransactions() {
-    const transactions = getTransactions();
+    let transactions = getTransactions();
     const container = document.getElementById('transactions-list');
 
     if (transactions.length === 0) {
@@ -191,8 +196,34 @@ function renderTransactions() {
         return;
     }
 
-    // 按日期降序排序
-    transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+    const filterType = document.getElementById('filter-type')?.value || 'all';
+    const filterSort = document.getElementById('filter-sort')?.value || 'date-desc';
+
+    // 按类型筛选
+    if (filterType !== 'all') {
+        transactions = transactions.filter(t => t.type === filterType);
+    }
+
+    // 排序
+    switch (filterSort) {
+        case 'date-asc':
+            transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+            break;
+        case 'date-desc':
+            transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            break;
+        case 'amount-asc':
+            transactions.sort((a, b) => (a.price * a.amount) - (b.price * b.amount));
+            break;
+        case 'amount-desc':
+            transactions.sort((a, b) => (b.price * b.amount) - (a.price * a.amount));
+            break;
+    }
+
+    if (transactions.length === 0) {
+        container.innerHTML = '<p class="empty-state">无符合条件的交易记录</p>';
+        return;
+    }
 
     container.innerHTML = transactions.map(t => {
         const totalCost = (t.price * t.amount).toFixed(2);
