@@ -317,6 +317,42 @@ body {
     flex-wrap: wrap;
 }
 
+.filters {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 180px;
+}
+
+.filter-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.filter-group select {
+    padding: 10px 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.filter-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
 .btn-secondary {
     padding: 10px 20px;
     background: var(--bg-secondary);
@@ -355,7 +391,7 @@ body {
 .transactions-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
 }
 
 .empty-state {
@@ -366,8 +402,8 @@ body {
 
 .transaction-item {
     border: 2px solid var(--border-color);
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: 10px;
+    padding: 16px;
     transition: all 0.3s;
 }
 
@@ -380,18 +416,18 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 8px;
 }
 
 .transaction-type {
     display: inline-flex;
     align-items: center;
-    padding: 6px 12px;
+    padding: 4px 10px;
     border-radius: 6px;
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
 }
 
 .transaction-type.buy {
@@ -406,14 +442,14 @@ body {
 
 .transaction-date {
     color: var(--text-secondary);
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
 }
 
 .transaction-details {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px;
-    margin-bottom: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .detail-item {
@@ -422,48 +458,48 @@ body {
 }
 
 .detail-label {
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
 }
 
 .detail-value {
-    font-size: 1rem;
+    font-size: 0.9375rem;
     font-weight: 600;
     color: var(--text-primary);
 }
 
 .transaction-note {
     background: var(--bg-secondary);
-    padding: 16px;
-    border-radius: 8px;
-    margin-top: 12px;
-    border-left: 4px solid var(--primary-color);
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 10px;
+    border-left: 3px solid var(--primary-color);
 }
 
 .transaction-note p {
     color: var(--text-secondary);
-    font-size: 0.875rem;
-    line-height: 1.6;
+    font-size: 0.8125rem;
+    line-height: 1.5;
     white-space: pre-wrap;
 }
 
 .transaction-actions {
     display: flex;
     gap: 8px;
-    margin-top: 16px;
+    margin-top: 12px;
 }
 
 .btn-delete {
-    padding: 8px 16px;
+    padding: 6px 14px;
     background: transparent;
     border: 1px solid var(--danger-color);
     color: var(--danger-color);
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 0.8125rem;
     transition: all 0.3s;
 }
 

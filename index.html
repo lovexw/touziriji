@@ -113,6 +113,26 @@
                     </div>
                 </div>
                 
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>交易类型</label>
+                        <select id="filter-type" onchange="applyFilters()">
+                            <option value="all">全部</option>
+                            <option value="buy">买入</option>
+                            <option value="sell">卖出</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>排序方式</label>
+                        <select id="filter-sort" onchange="applyFilters()">
+                            <option value="date-desc">时间降序</option>
+                            <option value="date-asc">时间升序</option>
+                            <option value="amount-desc">金额降序</option>
+                            <option value="amount-asc">金额升序</option>
+                        </select>
+                    </div>
+                </div>
+                
                 <div class="transactions-list" id="transactions-list">
                     <p class="empty-state">暂无交易记录</p>
                 </div>
