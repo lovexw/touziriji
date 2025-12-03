@@ -30,80 +30,37 @@ body {
     display: none !important;
 }
 
-/* 认证界面 */
-.auth-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
-}
-
-.auth-card {
-    background: var(--bg-primary);
-    padding: 40px;
-    border-radius: 16px;
-    box-shadow: var(--shadow-lg);
-    text-align: center;
-    max-width: 400px;
-    width: 100%;
-}
-
-.auth-card h1 {
-    font-size: 2rem;
-    margin-bottom: 10px;
-    color: var(--text-primary);
-}
-
-.auth-card p {
-    color: var(--text-secondary);
-    margin-bottom: 20px;
-}
-
-.auth-card input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 16px;
-    margin-bottom: 16px;
-    transition: border-color 0.3s;
-}
-
-.auth-card input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-}
-
-.auth-card button {
-    width: 100%;
-    padding: 12px 16px;
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.auth-card button:hover {
-    background: var(--primary-dark);
-}
-
-.error-message {
-    color: var(--danger-color);
-    font-size: 14px;
-    margin-top: 10px;
-    min-height: 20px;
-}
-
-/* 主应用容器 */
 .app-container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 20px;
+}
+
+.warning-banner {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    box-shadow: var(--shadow);
+}
+
+.warning-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.warning-content {
+    color: #92400e;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+
+.warning-content strong {
+    color: #78350f;
 }
 
 /* 头部 */
@@ -126,24 +83,6 @@ body {
     color: var(--text-primary);
 }
 
-.logout-btn {
-    padding: 10px 20px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s;
-}
-
-.logout-btn:hover {
-    background: var(--danger-color);
-    color: white;
-    border-color: var(--danger-color);
-}
-
-/* 仪表板 */
 .dashboard {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -523,10 +462,22 @@ body {
     font-size: 0.875rem;
 }
 
-/* 响应式设计 */
 @media (max-width: 768px) {
     .app-container {
         padding: 12px;
+    }
+
+    .warning-banner {
+        padding: 12px 16px;
+        gap: 8px;
+    }
+
+    .warning-icon {
+        font-size: 1.25rem;
+    }
+
+    .warning-content {
+        font-size: 0.875rem;
     }
 
     .header {

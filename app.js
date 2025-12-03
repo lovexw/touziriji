@@ -1,104 +1,24 @@
-// 配置
 const CONFIG = {
-    PASSWORD_KEY: 'btc_journal_auth',
     TRANSACTIONS_KEY: 'btc_transactions',
     PRICE_API: 'https://api.coinbase.com/v2/prices/BTC-USD/spot',
-    PRICE_UPDATE_INTERVAL: 60000, // 1分钟更新一次
+    PRICE_UPDATE_INTERVAL: 60000,
 };
 
-// 全局状态
 let currentBTCPrice = 0;
 let priceUpdateTimer = null;
 
-// 初始化应用
 document.addEventListener('DOMContentLoaded', () => {
-    // 检查URL参数中的密码
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlPassword = urlParams.get('password');
-    
-    if (urlPassword) {
-        // 如果URL中有密码，验证并存储
-        if (validatePassword(urlPassword)) {
-            sessionStorage.setItem(CONFIG.PASSWORD_KEY, 'true');
-            initApp();
-        } else {
-            showAuthScreen();
-        }
-    } else if (sessionStorage.getItem(CONFIG.PASSWORD_KEY)) {
-        // 如果已经登录
-        initApp();
-    } else {
-        showAuthScreen();
-    }
+    initApp();
 
-    // 设置今天的日期为默认值
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('transaction-date').value = today;
 
-    // 绑定表单提交
     document.getElementById('transaction-form').addEventListener('submit', handleTransactionSubmit);
 
-    // 绑定导入文件
     document.getElementById('import-file-input').addEventListener('change', handleFileImport);
-
-    // 回车键提交密码
-    document.getElementById('password-input').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            checkPassword();
-        }
-    });
 });
 
-// 显示认证界面
-function showAuthScreen() {
-    document.getElementById('auth-container').classList.remove('hidden');
-    document.getElementById('app-container').classList.add('hidden');
-}
-
-// 显示应用界面
-function showAppScreen() {
-    document.getElementById('auth-container').classList.add('hidden');
-    document.getElementById('app-container').classList.remove('hidden');
-}
-
-// 验证密码（可以通过环境变量或Cloudflare配置）
-function validatePassword(password) {
-    // 默认密码，部署时可以通过Cloudflare环境变量设置
-    // 在Cloudflare Pages中，可以在设置中添加环境变量 BTC_JOURNAL_PASSWORD
-    const correctPassword = typeof BTC_JOURNAL_PASSWORD !== 'undefined' 
-        ? BTC_JOURNAL_PASSWORD 
-        : 'btc2024';
-    
-    return password === correctPassword;
-}
-
-// 检查密码
-function checkPassword() {
-    const password = document.getElementById('password-input').value;
-    const errorMessage = document.getElementById('error-message');
-
-    if (validatePassword(password)) {
-        sessionStorage.setItem(CONFIG.PASSWORD_KEY, 'true');
-        errorMessage.textContent = '';
-        initApp();
-    } else {
-        errorMessage.textContent = '密码错误，请重试';
-        document.getElementById('password-input').value = '';
-    }
-}
-
-// 退出登录
-function logout() {
-    sessionStorage.removeItem(CONFIG.PASSWORD_KEY);
-    if (priceUpdateTimer) {
-        clearInterval(priceUpdateTimer);
-    }
-    showAuthScreen();
-}
-
-// 初始化应用
 function initApp() {
-    showAppScreen();
     updateBTCPrice();
     renderTransactions();
     updateStatistics();

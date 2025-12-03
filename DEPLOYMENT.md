@@ -60,47 +60,9 @@ git push -u origin main
 6. **访问你的应用**
    - 部署完成后会得到一个 URL，类似：
    - `https://btc-investment-journal.pages.dev`
+   - 打开即可直接使用，无需密码
 
-### 第四步：设置自定义密码（可选）
-
-#### 方法A：修改代码中的默认密码
-
-编辑 `app.js`，修改第62行：
-```javascript
-const correctPassword = typeof BTC_JOURNAL_PASSWORD !== 'undefined' 
-    ? BTC_JOURNAL_PASSWORD 
-    : 'your-secure-password';  // 改成你的密码
-```
-
-然后重新提交并推送：
-```bash
-git add app.js
-git commit -m "Update password"
-git push
-```
-
-Cloudflare Pages 会自动重新部署。
-
-#### 方法B：使用环境变量（更安全）
-
-1. 在 Cloudflare Pages 项目页面
-2. 进入 **Settings** 标签
-3. 找到 **Environment variables**
-4. 点击 **Add variable**
-5. 添加：
-   - Variable name: `BTC_JOURNAL_PASSWORD`
-   - Value: 你的密码
-   - Environment: Production
-6. 保存并重新部署
-
-#### 方法C：通过 URL 参数
-
-直接在浏览器中访问：
-```
-https://your-app.pages.dev/?password=your-password
-```
-
-### 第五步：绑定自定义域名（可选）
+### 第四步：绑定自定义域名（可选）
 
 1. 在 Cloudflare Pages 项目页面
 2. 进入 **Custom domains** 标签
@@ -150,15 +112,16 @@ git push
 
 Cloudflare Pages 会自动检测到更新并重新部署。
 
-## 数据备份建议
+## ⚠️ 数据备份建议（重要！）
 
-由于数据存储在浏览器本地，建议：
+**所有数据仅存储在浏览器本地，不会同步到云端。请务必定期备份！**
 
 1. **定期导出数据**
-   - 在应用中点击"导出数据"
-   - 保存 JSON 文件
+   - 在应用中点击「导出数据」
+   - 保存 JSON 文件到安全位置
+   - 建议每次交易后都导出一次
 
-2. **备份到 GitHub**
+2. **备份到 GitHub（推荐）**
    - 创建一个私有仓库
    - 将导出的 JSON 文件上传
    
@@ -168,9 +131,17 @@ Cloudflare Pages 会自动检测到更新并重新部署。
    git push
    ```
 
-3. **多设备同步**
-   - 在新设备上使用"导入数据"功能
+3. **备份到云盘**
+   - 保存到 OneDrive、Google Drive、iCloud 等
+   - 确保自动同步功能开启
+
+4. **多设备同步**
+   - 在新设备上使用「导入数据」功能
    - 导入之前导出的 JSON 文件
+
+5. **定期检查备份**
+   - 确保备份文件能正常打开
+   - 验证数据完整性
 
 ## 故障排查
 
@@ -187,13 +158,6 @@ Cloudflare Pages 会自动检测到更新并重新部署。
 - 部署状态是否为"成功"
 - 浏览器是否支持
 - 网络连接是否正常
-
-### 密码不工作
-
-检查：
-- 密码是否包含特殊字符（需要URL编码）
-- 环境变量是否正确设置
-- 是否清除了浏览器缓存
 
 ### 价格不更新
 
@@ -229,12 +193,12 @@ const CONFIG = {
 
 ## 安全最佳实践
 
-1. ✅ 使用强密码
-2. ✅ 启用 HTTPS（Cloudflare 自动提供）
-3. ✅ 定期备份数据
+1. ✅ 定期备份数据（每次交易后）
+2. ✅ 将备份保存在多个位置
+3. ✅ 启用 HTTPS（Cloudflare 自动提供）
 4. ✅ 不在公共电脑使用
-5. ✅ 使用私有浏览器模式处理敏感信息
-6. ✅ 考虑使用 VPN
+5. ✅ 考虑对备份文件加密
+6. ✅ 定期检查备份文件完整性
 
 ## 成本
 
