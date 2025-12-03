@@ -6,6 +6,7 @@ const CONFIG = {
 };
 
 let currentBTCPrice = 0;
+let currentAhr999 = null;
 let priceUpdateTimer = null;
 let editingTransactionId = null;
 
@@ -37,16 +38,28 @@ async function updateBTCPrice() {
         const response = await fetch(CONFIG.PRICE_API);
         const data = await response.json();
         currentBTCPrice = parseFloat(data.data.amount);
+        currentAhr999 = null;
         
         displayPriceAndUpdate(false);
+        
+        try {
+            const ahr999Response = await fetch(CONFIG.FALLBACK_PRICE_API);
+            const ahr999Data = await ahr999Response.json();
+            currentAhr999 = parseFloat(ahr999Data.ahr999);
+            displayAhr999Indicator();
+        } catch (ahr999Error) {
+            console.error('获取AHR999指数失败:', ahr999Error);
+        }
     } catch (error) {
         console.error('主API获取比特币价格失败:', error);
         try {
             const fallbackResponse = await fetch(CONFIG.FALLBACK_PRICE_API);
             const fallbackData = await fallbackResponse.json();
             currentBTCPrice = parseFloat(fallbackData.currentPrice);
+            currentAhr999 = parseFloat(fallbackData.ahr999);
             
             displayPriceAndUpdate(true);
+            displayAhr999Indicator();
         } catch (fallbackError) {
             console.error('备用API获取比特币价格失败:', fallbackError);
             document.getElementById('btc-price').textContent = '获取失败';
@@ -71,6 +84,40 @@ function displayPriceAndUpdate(isFallback) {
     }
     
     updateStatistics();
+}
+
+function displayAhr999Indicator() {
+    const valueElement = document.getElementById('ahr999-value');
+    const tipElement = document.getElementById('ahr999-tip');
+    
+    if (currentAhr999 === null || isNaN(currentAhr999)) {
+        valueElement.textContent = 'AHR999 指数：--';
+        tipElement.textContent = '数据获取中...';
+        tipElement.className = 'ahr999-tip';
+        return;
+    }
+    
+    valueElement.textContent = `AHR999 指数：${currentAhr999.toFixed(4)}`;
+    
+    let tipText = '';
+    let tipClass = 'ahr999-tip';
+    
+    if (currentAhr999 < 0.45) {
+        tipText = '🎯 可以抄底';
+        tipClass += ' bottom';
+    } else if (currentAhr999 < 0.7) {
+        tipText = '✨ 定投好时机';
+        tipClass += ' good';
+    } else if (currentAhr999 < 1.2) {
+        tipText = '📊 可以定投';
+        tipClass += ' ok';
+    } else {
+        tipText = '⏸️ 暂停定投';
+        tipClass += ' pause';
+    }
+    
+    tipElement.textContent = tipText;
+    tipElement.className = tipClass;
 }
 
 function setupCalculationListeners() {
