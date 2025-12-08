@@ -190,6 +190,90 @@ body {
     font-size: 1.125rem;
 }
 
+.tooltip-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 4px;
+    cursor: help;
+}
+
+.tooltip-icon .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    transition: all 0.2s;
+}
+
+.tooltip-icon:hover .icon {
+    background: var(--primary-dark);
+    transform: scale(1.1);
+}
+
+.tooltip-content {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    white-space: nowrap;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 1000;
+    min-width: 280px;
+}
+
+.tooltip-content::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #374151;
+}
+
+.tooltip-icon:hover .tooltip-content {
+    opacity: 1;
+    visibility: visible;
+    bottom: calc(100% + 12px);
+}
+
+.tooltip-content strong {
+    display: block;
+    color: var(--primary-color);
+    margin-bottom: 4px;
+    font-size: 0.875rem;
+}
+
+.tooltip-content em {
+    display: block;
+    margin-top: 6px;
+    font-style: normal;
+    color: #d1d5db;
+    font-size: 0.75rem;
+}
+
+.tooltip-content br {
+    margin-bottom: 2px;
+}
+
 /* 表单部分 */
 .add-transaction {
     background: var(--bg-primary);
