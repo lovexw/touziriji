@@ -57,15 +57,45 @@
                         <span class="stat-value" id="current-value">$0.00</span>
                     </div>
                     <div class="stat-item profit">
-                        <span class="stat-label">账面收益（未实现）：</span>
+                        <span class="stat-label">
+                            账面收益（未实现）：
+                            <span class="tooltip-icon">
+                                <span class="icon">?</span>
+                                <span class="tooltip-content">
+                                    <strong>账面收益（未实现）</strong><br>
+                                    当前持有的 BTC 还没卖出，暂时产生的盈利/亏损<br>
+                                    <em>特点：随 BTC 价格实时变动，属于"浮动收益"（没实际落袋）</em>
+                                </span>
+                            </span>
+                        </span>
                         <span class="stat-value" id="unrealized-profit">$0.00 (0.00%)</span>
                     </div>
                     <div class="stat-item profit">
-                        <span class="stat-label">已实现收益：</span>
+                        <span class="stat-label">
+                            已实现收益：
+                            <span class="tooltip-icon">
+                                <span class="icon">?</span>
+                                <span class="tooltip-content">
+                                    <strong>已实现收益</strong><br>
+                                    之前卖出部分 BTC 后，实际拿到手的盈利<br>
+                                    <em>特点：收益已经确定，不会再随价格变化</em>
+                                </span>
+                            </span>
+                        </span>
                         <span class="stat-value" id="realized-profit">$0.00 (0.00%)</span>
                     </div>
                     <div class="stat-item profit">
-                        <span class="stat-label">总收益：</span>
+                        <span class="stat-label">
+                            总收益：
+                            <span class="tooltip-icon">
+                                <span class="icon">?</span>
+                                <span class="tooltip-content">
+                                    <strong>总收益</strong><br>
+                                    账面收益（未实现） + 已实现收益 的总和<br>
+                                    <em>特点：反映这笔 BTC 投资的"整体盈利情况"</em>
+                                </span>
+                            </span>
+                        </span>
                         <span class="stat-value" id="total-profit">$0.00 (0.00%)</span>
                     </div>
                 </div>
