@@ -375,34 +375,50 @@ function updateStatistics() {
     const transactions = getTransactions();
     
     let totalHoldings = 0;
-    let totalInvested = 0;
-    let totalSold = 0;
+    let totalBuyAmount = 0;
+    let totalBuyCost = 0;
+    let totalSellAmount = 0;
+    let totalSellRevenue = 0;
 
     transactions.forEach(t => {
         if (t.type === 'buy') {
             totalHoldings += t.amount;
-            totalInvested += t.price * t.amount;
+            totalBuyAmount += t.amount;
+            totalBuyCost += t.price * t.amount;
         } else {
             totalHoldings -= t.amount;
-            totalSold += t.price * t.amount;
+            totalSellAmount += t.amount;
+            totalSellRevenue += t.price * t.amount;
         }
     });
 
-    // 平均成本（只计算买入）
-    const buyTransactions = transactions.filter(t => t.type === 'buy');
-    const totalBuyAmount = buyTransactions.reduce((sum, t) => sum + t.amount, 0);
-    const totalBuyCost = buyTransactions.reduce((sum, t) => sum + (t.price * t.amount), 0);
+    // 平均买入成本
     const avgCost = totalBuyAmount > 0 ? totalBuyCost / totalBuyAmount : 0;
 
     // 当前市值
     const currentValue = totalHoldings * currentBTCPrice;
 
-    // 净投入（总投入 - 卖出收入）
-    const netInvested = totalInvested - totalSold;
+    // 当前持仓成本（使用平均成本）
+    const currentHoldingsCost = totalHoldings * avgCost;
 
-    // 账面收益
-    const profit = currentValue - netInvested;
-    const profitPercent = netInvested > 0 ? (profit / netInvested) * 100 : 0;
+    // 已卖出部分的成本（使用平均成本）
+    const soldCost = totalSellAmount * avgCost;
+
+    // 已实现收益（卖出收入 - 卖出成本）
+    const realizedProfit = totalSellRevenue - soldCost;
+    const realizedProfitPercent = soldCost > 0 ? (realizedProfit / soldCost) * 100 : 0;
+
+    // 未实现收益（当前市值 - 当前持仓成本）
+    const unrealizedProfit = currentValue - currentHoldingsCost;
+    const unrealizedProfitPercent = currentHoldingsCost > 0 ? (unrealizedProfit / currentHoldingsCost) * 100 : 0;
+
+    // 总收益
+    const totalProfit = realizedProfit + unrealizedProfit;
+    const totalInvested = totalBuyCost;
+    const totalProfitPercent = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
+
+    // 净投入（总买入 - 卖出收入）
+    const netInvested = totalBuyCost - totalSellRevenue;
 
     // 更新界面
     document.getElementById('total-holdings').textContent = `${totalHoldings.toFixed(8)} BTC`;
@@ -419,14 +435,32 @@ function updateStatistics() {
         maximumFractionDigits: 2
     })}`;
 
-    const profitElement = document.getElementById('profit');
-    const profitText = `$${profit.toLocaleString('en-US', {
+    // 未实现收益
+    const unrealizedElement = document.getElementById('unrealized-profit');
+    const unrealizedText = `$${unrealizedProfit.toLocaleString('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
-    })} (${profitPercent >= 0 ? '+' : ''}${profitPercent.toFixed(2)}%)`;
-    
-    profitElement.textContent = profitText;
-    profitElement.style.color = profit >= 0 ? 'var(--success-color)' : 'var(--danger-color)';
+    })} (${unrealizedProfitPercent >= 0 ? '+' : ''}${unrealizedProfitPercent.toFixed(2)}%)`;
+    unrealizedElement.textContent = unrealizedText;
+    unrealizedElement.style.color = unrealizedProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)';
+
+    // 已实现收益
+    const realizedElement = document.getElementById('realized-profit');
+    const realizedText = `$${realizedProfit.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    })} (${realizedProfitPercent >= 0 ? '+' : ''}${realizedProfitPercent.toFixed(2)}%)`;
+    realizedElement.textContent = realizedText;
+    realizedElement.style.color = realizedProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)';
+
+    // 总收益
+    const totalProfitElement = document.getElementById('total-profit');
+    const totalProfitText = `$${totalProfit.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    })} (${totalProfitPercent >= 0 ? '+' : ''}${totalProfitPercent.toFixed(2)}%)`;
+    totalProfitElement.textContent = totalProfitText;
+    totalProfitElement.style.color = totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)';
 }
 
 // 导出数据
